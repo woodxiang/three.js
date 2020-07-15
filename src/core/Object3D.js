@@ -378,6 +378,16 @@ Object3D.prototype = Object.assign( Object.create( EventDispatcher.prototype ), 
 
 	},
 
+	removeAll: function () {
+		for (var i = 0; i < this.children.length; i++) {
+			this.children[i].parent = null;
+			this.children[i].dispatchEvent({
+				type: 'removed'
+			});
+		}
+		this.children = [];
+	},
+
 	attach: function ( object ) {
 
 		// adds object as a child of this, while maintaining the object's world transform

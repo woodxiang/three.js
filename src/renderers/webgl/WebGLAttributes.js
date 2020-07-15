@@ -14,9 +14,20 @@ function WebGLAttributes( gl, capabilities ) {
 		const usage = attribute.usage;
 
 		const buffer = gl.createBuffer();
+		var arrayBuffer = new Float32Array( 9 );
 
 		gl.bindBuffer( bufferType, buffer );
-		gl.bufferData( bufferType, array, usage );
+		if (attribute.isFaceNormal) {
+			gl.bufferData(bufferType, 12 * array.length, usage);
+			for (var i = 0; i < array.length; i += 3) {
+				for (var j = 0; j < 9; j++) {
+					arrayBuffer[j] = array[i + (j % 3)];
+				}
+				gl.bufferSubData(bufferType, 12 * i, arrayBuffer);
+			}
+		} else {
+			gl.bufferData(bufferType, array, usage);
+		}
 
 		attribute.onUploadCallback();
 
